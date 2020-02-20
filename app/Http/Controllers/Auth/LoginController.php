@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -20,14 +21,14 @@ class LoginController extends Controller
 
     use AuthenticatesUsers;
 
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
     protected function redirectTo()
     {
-        return route('home');
+
+        if (Auth::user()->isAdmin()) {
+            return route('home');
+        } else {
+            return route('person.orders.index');
+        }
     }
 
     /**

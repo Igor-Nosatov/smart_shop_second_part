@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Order;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class OrderController extends Controller
@@ -46,9 +45,9 @@ class OrderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Order $order)
     {
-        //
+        return view('auth.orders.show', compact('order'));
     }
 
     /**
