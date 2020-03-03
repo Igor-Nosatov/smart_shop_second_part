@@ -6,12 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
+    protected $fillable = ['user_id'];
     public function products()
     {
         return $this->belongsToMany(Product::class)->withPivot('count')->withTimestamps();
     }
 
-        public function scopeActive($query)
+    public function scopeActive($query)
     {
         return $query->where('status', 1);
     }
@@ -19,12 +20,11 @@ class Order extends Model
     public function calculateFullSum()
     {
         $sum = 0;
-        foreach ($this->products as $product) {
+        foreach ($this->products()->withTrashed()->get() as $product) {
             $sum += $product->getPriceForCount();
         }
         return $sum;
     }
-
 
     public static function eraseOrderSum()
     {
@@ -55,9 +55,4 @@ class Order extends Model
             return false;
         }
     }
-
-
-
-
-
 }

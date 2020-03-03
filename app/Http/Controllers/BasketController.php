@@ -37,10 +37,9 @@ class BasketController extends Controller
 
         return redirect()->route('index');
     }
-
+    
     public function basketPlace()
     {
-        return view('order');
         $orderId = session('orderId');
         if (is_null($orderId)) {
             return redirect()->route('index');

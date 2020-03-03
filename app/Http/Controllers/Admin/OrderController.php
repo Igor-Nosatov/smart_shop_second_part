@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Order;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -47,7 +49,8 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        return view('auth.orders.show', compact('order'));
+        $products = $order->products()->withTrashed()->get();
+        return view('auth.orders.show', compact('order', 'products'));
     }
 
     /**
