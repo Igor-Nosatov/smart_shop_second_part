@@ -3,12 +3,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Http\Requests\ProductsFilterRequest;
+use App\Http\Requests\SubscriptionRequest;
 use App\Models\Product;
+use App\Models\Subscription;
 use Illuminate\Http\Request;
 
 class MainController extends Controller
 {
-
     public function index(ProductsFilterRequest $request) {
         $productsQuery = Product::with('category');
 
@@ -25,8 +26,7 @@ class MainController extends Controller
                 $productsQuery->$field();
             }
         }
-
-        $products = $productsQuery->paginate(6)->withPath("?" . $request->getQueryString());
+        $products = $productsQuery->paginate(6)->withPath("?".$request->getQueryString());
 
         return view('index', compact('products'));
     }
@@ -47,6 +47,16 @@ class MainController extends Controller
     public function product($category, $productCode) {
         $product = Product::withTrashed()->byCode($productCode)->firstOrFail();
         return view('product', compact('product'));
+    }
+
+    public function subscribe(SubscriptionRequest $request, Product $product)
+    {
+        Subscription::create([
+            'email' => $request->email,
+            'product_id' => $product->id,
+        ]);
+
+        return redirect()->back()->with('success', 'Спасибо, мы сообщим вам о поступлении товара');
     }
 
 }
